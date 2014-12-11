@@ -1,59 +1,203 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
   <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>GlobalPhone</title>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link href='https://fonts.googleapis.com/css?family=Architects+Daughter' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
 
-    <!-- Bootstrap -->
-    <link href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Fonts -->
-    <link href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
-    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
-    <link href='http://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
-
-    <!-- Custom Theme CSS -->
-    <!--<link rel="icon" type="image/png" href="/favicon.png" /> -->
-    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
-    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
-  </head>
-  <body id="page-top" >
 
-    <div class="jumbotron">
-      <div class="container">
-        <h1>GlobalPhone</h1>
+    <title>Globalphone.GitHub.io by GlobalPhone</title>
+  </head>
+
+  <body>
+    <header>
+      <div class="inner">
+        <h1>Globalphone.GitHub.io</h1>
+        <h2>GlobalPhone parses, validates, and formats local and international phone numbers</h2>
+        <a href="https://github.com/GlobalPhone" class="button"><small>Follow me on</small> GitHub</a>
+      </div>
+    </header>
+
+    <div id="content-wrapper">
+      <div class="inner clearfix">
+        <section id="main-content">
+          <h1>
+<a id="globalphone" class="anchor" href="#globalphone" aria-hidden="true"><span class="octicon octicon-link"></span></a>GlobalPhone</h1>
+
+<p>GlobalPhone parses, validates, and formats local and international phone numbers according to the <a href="http://en.wikipedia.org/wiki/E.164">E.164 standard</a>.</p>
+
+<p><strong>Store and display phone numbers in your app.</strong> Accept phone number input in national or international format. Convert phone numbers to international strings (<code>+13125551212</code>) for storage and retrieval. Present numbers in national format (<code>(312) 555-1212</code>) in your UI.</p>
+
+<p><strong>Designed with the future in mind.</strong> GlobalPhone uses format specifications from Google's open-source <a href="http://code.google.com/p/libphonenumber/">libphonenumber</a> database. No need to upgrade the library when a new phone format is introduced—just generate a new copy of the database and check it into your app.</p>
+
+<h2>
+<a id="installation" class="anchor" href="#installation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Installation</h2>
+
+<ol>
+<li>
+<p>Add the <code>GlobalPhone</code> nuget package to your app. For example, using Package Manager Console:</p>
+
+<pre><code>PM&gt; Install-Package GlobalPhone
+</code></pre>
+</li>
+<li>
+<p>Use <code>GlobalPhoneDbgen</code> to convert Google's libphonenumber <code>PhoneNumberMetaData.xml</code> file into a JSON database for GlobalPhone. You can either install it using nuget in some project:</p>
+
+<pre><code>PM&gt; Install-Package GlobalPhoneDbgen
+</code></pre>
+</li>
+</ol>
+
+<p>Or you can add it as a solution level package.</p>
+
+<p>However you have installed it, you can then use the command prompt to execute the exe: </p>
+
+<pre><code>    CMD&gt; .\packages\GlobalPhoneDbgen\tools\GlobalPhoneDbgen.exe &gt; db/global_phone.json
+</code></pre>
+
+<ol>
+<li>
+<p>Tell GlobalPhone where to find the database:</p>
+
+<pre><code>GlobalPhone.DbPath = "db/global_phone.json";
+</code></pre>
+</li>
+</ol>
+
+<h2>
+<a id="examples" class="anchor" href="#examples" aria-hidden="true"><span class="octicon octicon-link"></span></a>Examples</h2>
+
+<p>Parse an international number string into a <code>GlobalPhone::Number</code> object:</p>
+
+<pre><code>var number = GlobalPhone.Parse("+1-312-555-1212");
+# =&gt; #&lt;GlobalPhone::Number Territory=#&lt;GlobalPhone::Territory CountryCode=1 Name=US&gt; NationalString="3125551212"&gt;
+</code></pre>
+
+<p>Query the country code and likely territory name of the number:</p>
+
+<pre><code>number.CountryCode
+# =&gt; "1"
+
+number.Territory.Name
+# =&gt; "US"
+</code></pre>
+
+<p>Present the number in national and international formats:</p>
+
+<pre><code>number.NationalFormat
+# =&gt; "(312) 555-1212"
+
+number.InternationalFormat
+# =&gt; "+1 312-555-1212"
+</code></pre>
+
+<p>Is the number valid? (Note: this is not definitive. For example, the number here is "IsValid" by format, but there are no US numbers that start with 555. The <code>IsValid</code> method may return false positives, but <em>should not</em> return false negatives unless the database is out of date.)</p>
+
+<pre><code>number.IsValid
+# =&gt; true
+</code></pre>
+
+<p>Get the number's normalized E.164 international string:</p>
+
+<pre><code>number.InternationalString
+# =&gt; "+13125551212"
+</code></pre>
+
+<p>Parse a number in national format for a given territory:</p>
+
+<pre><code>number = GlobalPhone.Parse("(0) 20-7031-3000", "gb");
+# =&gt; #&lt;GlobalPhone::Number Territory=#&lt;GlobalPhone::Territory CountryCode=44 Name=GB&gt; NationalString="2070313000"&gt;
+</code></pre>
+
+<p>Parse an international number using a territory's international dialing prefix:</p>
+
+<pre><code>number = GlobalPhone.Parse("00 1 3125551212", "gb");
+# =&gt; #&lt;GlobalPhone::Number Territory=#&lt;GlobalPhone::Territory CountryCode=1 Name=US&gt; NationalString="3125551212"&gt;
+</code></pre>
+
+<p>Set the default territory to Great Britain (territory names are <a href="http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2">ISO 3166-1 Alpha-2</a> codes):</p>
+
+<pre><code>GlobalPhone.DefaultTerritoryName = "gb";
+# =&gt; "gb"
+
+GlobalPhone.Parse("(0) 20-7031-3000");
+# =&gt; #&lt;GlobalPhone::Number Territory=#&lt;GlobalPhone::Territory CountryCode=44 Name=GB&gt; NationalString="2070313000"&gt;
+</code></pre>
+
+<p>Shortcuts for validating a phone number:</p>
+
+<pre><code>GlobalPhone.Validate("+1 312-555-1212");
+# =&gt; true
+
+GlobalPhone.Validate("+442070313000");
+# =&gt; true
+
+GlobalPhone.Validate("(0) 20-7031-3000");
+# =&gt; false
+
+GlobalPhone.Validate("(0) 20-7031-3000", "gb");
+# =&gt; true
+</code></pre>
+
+<p>Shortcuts for normalizing a phone number in E.164 format:</p>
+
+<pre><code>GlobalPhone.Normalize("(312) 555-1212");
+# =&gt; "+13125551212"
+
+GlobalPhone.Normalize("+442070313000");
+# =&gt; "+442070313000"
+
+GlobalPhone.Normalize("(0) 20-7031-3000");
+# =&gt; #&lt;GlobalPhone::FailedToParseNumberException&gt;
+
+GlobalPhone.Normalize("(0) 20-7031-3000", "gb");
+# =&gt; "+442070313000"
+</code></pre>
+
+<h2>
+<a id="caveats" class="anchor" href="#caveats" aria-hidden="true"><span class="octicon octicon-link"></span></a>Caveats</h2>
+
+<p>GlobalPhone currently does not parse emergency numbers or SMS short code numbers.</p>
+
+<p>Validation is not definitive and may return false positives, but <em>should not</em> return false negatives unless the database is out of date.</p>
+
+<p>Territory heuristics are imprecise. Parsing a number will usually result in the territory being set to the primary territory of the region. For example, Canadian numbers will be parsed with a territory of <code>US</code>. (In most cases this does not matter, but if your application needs to perform geolocation using phone numbers, GlobalPhone may not be a good fit.)</p>
+
+<h2>
+<a id="development" class="anchor" href="#development" aria-hidden="true"><span class="octicon octicon-link"></span></a>Development</h2>
+
+<p>The GlobalPhone source code is <a href="https://github.com/wallymathieu/GlobalPhone">hosted on GitHub</a>. You can check out a copy of the latest code using Git:</p>
+
+<pre><code>CMD&gt; git clone https://github.com/wallymathieu/GlobalPhone.git
+</code></pre>
+
+<p>If you've found a bug or have a question, please open an issue on the <a href="https://github.com/wallymathieu/GlobalPhone/issues">issue tracker</a>. Or, clone the GlobalPhone repository, write a failing test case, fix the bug, and submit a pull request.</p>
+
+<p>GlobalPhone is a port of Sam Stephenson GlobalPhone for ruby <a href="https://github.com/sstephenson/global_phone">hosted on GitHub</a>.</p>
+
+<h3>
+<a id="license" class="anchor" href="#license" aria-hidden="true"><span class="octicon octicon-link"></span></a>License</h3>
+
+<p>Copyright © 2013 Sam Stephenson, Oskar Gewalli</p>
+
+<p>Released under the MIT license. See <a href="LICENSE"><code>LICENSE</code></a> for details.</p>
+        </section>
+
+        <aside id="sidebar">
+
+
+          <p>This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the Architect theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.</p>
+        </aside>
       </div>
     </div>
 
-    <div class="container">
-      <!-- Example row of columns -->
-      <div class="row">
-        <div class="col-md-4">
-          <h2>What does it do?</h2>
-          <p>GlobalPhone parses, validates, and formats local and international phone numbers.</p>
-        </div>
-      </div>
-
-      <hr>
-
-      <footer>
-      <p>&copy; GlobalPhone 2014</p>
-      </footer>
-    </div> <!-- /container -->
-
-    <!-- Bootstrap core JavaScript
-    ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
-
-    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-    <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js"></script>
-    <!-- Include all compiled plugins (below), or include individual files as needed -->
-    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+  
   </body>
 </html>
