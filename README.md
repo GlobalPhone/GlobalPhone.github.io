@@ -1,6 +1,3 @@
-GlobalPhone
-===========
-
 GlobalPhone parses, validates, and formats local and international phone numbers according to the [E.164 standard](http://en.wikipedia.org/wiki/E.164).
 
 **Store and display phone numbers in your app.** Accept phone number input in national or international format. Convert phone numbers to international strings (`+13125551212`) for storage and retrieval. Present numbers in national format (`(312) 555-1212`) in your UI.
@@ -135,15 +132,6 @@ GlobalPhone currently does not parse emergency numbers or SMS short code numbers
 Validation is not definitive and may return false positives, but *should not* return false negatives unless the database is out of date.
 
 Territory heuristics are imprecise. Parsing a number will usually result in the territory being set to the primary territory of the region. For example, Canadian numbers will be parsed with a territory of `US`. (In most cases this does not matter, but if your application needs to perform geolocation using phone numbers, GlobalPhone may not be a good fit.)
-
-## Development
-The GlobalPhone source code is [hosted on GitHub](https://github.com/wallymathieu/GlobalPhone). You can check out a copy of the latest code using Git:
-
-    CMD> git clone https://github.com/wallymathieu/GlobalPhone.git
-
-If you've found a bug or have a question, please open an issue on the [issue tracker](https://github.com/wallymathieu/GlobalPhone/issues). Or, clone the GlobalPhone repository, write a failing test case, fix the bug, and submit a pull request.
-
-GlobalPhone is a port of Sam Stephenson GlobalPhone for ruby [hosted on GitHub](https://github.com/sstephenson/global_phone).
 
 ### License
 
